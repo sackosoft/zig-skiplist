@@ -1,0 +1,27 @@
+name: Run Tests (Windows)
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - .github/workflows/*
+      - src/**
+      - build.zig
+      - build.zig.zon
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - name: ⬇️ Checkout
+      uses: actions/checkout@v4
+
+    - name: (Z) Install Zig
+      uses: mlugg/setup-zig@v2
+      with:
+        version: 0.15.2
+
+    - name: ▶️ Run tests
+      shell: pwsh
+      run: zig build test --summary all
