@@ -54,61 +54,43 @@ It is recommended that you install `zig-skiplist` using `zig fetch`. This will a
 zig fetch --save=skiplist git+https://github.com/sackosoft/zig-skiplist
 ```
 
-Next, in order for your code to import `zig-skiplist`, you'll need to update your `build.zig` to do the following:
+Then, update your `build.zig` to add the module as an import to the module you're developing.
 
-1. get a reference the `zig-skiplist` dependency.
-2. get a reference to the `skiplist` module.
-3. add the module as an import to your executable or library.
+1. Reference the `zig-skiplist` dependency.
+2. Import the skiplist module into your module. This makes it available as an import via `@import("skiplist")`.
 
 ```zig
-// (1) Get a reference to the `zig fetch`'ed dependency
-const skiplist_dependency = b.dependency("skiplist", .{
-    .target = target,
-    .optimize = optimize,
-});
+// (1) Reference the dependency introduced by `zig fetch`.
+const skiplist_dep = b.dependency("skiplist", .{ .target = target, .optimize = optimize });
 
-// (2) Get a reference to the language bindings module.
-const skiplist = skiplist_dependency.module("skiplist");
-
-// Set up your library or executable
-const lib = // ...
-const exe = // ...
-
-// (3) Add the module as an import to your executable or library.
-my_exe.root_module.addImport("skiplist", skiplist);
-my_lib.root_module.addImport("skiplist", skiplist);
+// (2) Add the module as an import to your executable or library.
+your_module.addImport("skiplist", skiplist_dep.module("skiplist"));
 ```
 
-Now you can import and use the skiplist!
+Now you can import and use the skiplist! Refer to the [examples](./examples/) for more.
 
 ```zig
 const std = @import("std");
-const print = std.debug.print;
-const assert = std.debug.assert;
 
 const Skiplist = @import("skiplist");
 
 pub fn main() !void {
     var da = std.heap.DebugAllocator(.{}).init;
-    defer {
-        const check = da.deinit();
-        assert(check == .ok);
-    }
-    const alloc = da.allocator();
+    defer _ = da.deinit();
 
-    var list = try Skiplist.init(alloc);
-    defer { 
-        list.clear(false);
+    var list = try Skiplist.init(da.allocator());
+    defer {
+        list.clear(false); // clear first: the values in this example are not allocated and cannot be destroyed.
         list.deinit();
     }
 
     const key = "key";
-    var previous = try list.upsert(key, "world!"))
-    assert(previous == null);
+    const previous = try list.upsert(key, "world!");
+    std.debug.assert(previous == null);
 
-    var value = list.find(key);
-    assert(value != null);
-    print("Hello, {s}!\n", .{value});
+    const value = list.find(key);
+    std.debug.assert(value != null);
+    std.debug.print("Hello, {s}!\n", .{value.?});
 }
 ```
 

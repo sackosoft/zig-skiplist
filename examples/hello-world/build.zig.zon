@@ -1,0 +1,13 @@
+.{
+    .name = .helloworld,
+    .version = "0.0.1",
+    .dependencies = .{
+        .skiplist = .{
+            .url = "git+https://github.com/sackosoft/zig-skiplist#c1271d8c3be7b65d0519aa595accae616dabcd01",
+            .hash = "zig_skiplist-0.0.1-ZI9S6qhSAACiWleQljzSSxxrT_0pdLVYT_qtZ-f41vwU",
+        },
+    },
+    .minimum_zig_version = "0.15.2",
+    .paths = .{""},
+    .fingerprint = 0xf9eb20ad61526a8f,
+}
