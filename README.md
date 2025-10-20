@@ -94,6 +94,15 @@ pub fn main() !void {
 }
 ```
 
+## Implementation Notes
+
+This `zig-skiplist` implementation uses dynamically-sized skiplist nodes, kind of like [Flexible Array Members][10] in C.
+In [a benchmark][11] against the naive implementation, with a secondary allocation for forward pointers, `zig-skiplist`
+is about 50% faster and uses about 15% less memory.
+
+[10]: https://en.wikipedia.org/wiki/Flexible_array_member
+[11]: https://github.com/sackosoft/zig-skiplist/compare/main...benchmark/ratakor-vs-thsackos
+
 ## License
 
 The `zig-skiplist` project is distributed under the terms of the open and permissive MIT License.
