@@ -17,7 +17,7 @@ const MaxKey: []const u8 = Max[0..];
 const Level = u8;
 const MaxLevel = 48; // ¯\_(ツ)_/¯ 32 seems restrictive, 64 seems impossible.
 
-fn compare(a: []const u8, b: []const u8) std.math.Order {
+pub fn compare(a: []const u8, b: []const u8) std.math.Order {
     return std.mem.order(u8, a, b);
 }
 
@@ -30,7 +30,7 @@ prng: std.Random.Xoshiro256,
 nil: *Node,
 header: *Node,
 
-pub fn init(alloc: Alloc) Alloc.Error!@This() {
+pub fn init(alloc: Alloc, seed: u64) Alloc.Error!@This() {
     const nil = try Node.init(alloc, MaxKey, MinKey, 0);
     const header = try Node.init(alloc, MinKey, MinKey, MaxLevel);
     @memset(header.forwards(), nil);
@@ -40,7 +40,7 @@ pub fn init(alloc: Alloc) Alloc.Error!@This() {
         .alloc = alloc,
         .nil = nil,
         .header = header,
-        .prng = std.Random.DefaultPrng.init(7),
+        .prng = std.Random.DefaultPrng.init(seed),
     };
 }
 

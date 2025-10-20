@@ -1,0 +1,10 @@
+.{
+    .name = .benchmark,
+    .version = "0.0.1",
+    .dependencies = .{
+        .skiplist = .{ .path = "../" },
+    },
+    .minimum_zig_version = "0.15.2",
+    .paths = .{""},
+    .fingerprint = 0xb70c48fe037fbd5d,
+}
