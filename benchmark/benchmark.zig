@@ -14,7 +14,7 @@ fn runTest(skiplist: anytype) !void {
         random_data[i] = random.intRangeAtMost(u8, 63, 126);
     }
 
-    for (0..10_000) |_| {
+    for (0..100_000) |_| {
         const start = random.intRangeLessThan(usize, 0, 2000);
         const width = random.intRangeLessThan(usize, 6, 32);
         const key = random_data[start .. start + width];
